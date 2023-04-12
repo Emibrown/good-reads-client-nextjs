@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.11",
     "autoprefixer": "10.4.14",
+    "deepmerge": "^4.3.1",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
+    "graphql": "^16.6.0",
+    "lodash-es": "^4.17.21",
     "next": "13.3.0",
     "postcss": "8.4.21",
     "react": "18.2.0",
