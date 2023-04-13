@@ -3,9 +3,10 @@ import Header from '@/components/Header'
 import { ApolloProvider } from '@apollo/client';
 import useApollo from '../hooks/useApollo';
 import UserContextProvider from '@/providers/UserContextProvider';
+import { createApolloClient } from '@/apollo';
 
 export default function App({ Component, pageProps }) {
-  const client = useApollo(pageProps);
+  const client = createApolloClient();
 
   return (
     <UserContextProvider>

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { gql, useQuery } from "@apollo/client"
-import { addApolloState, initializeApollo } from "@/apollo";
+import { addApolloState, initializeApollo, createApolloClient } from "@/apollo";
 import Cookies from "universal-cookie";
 import { UserContext } from "@/providers/UserContextProvider";
 import BookTab from "@/components/BookTab";
@@ -24,15 +24,13 @@ const getBooksQuery = gql`
     }
 `;
 
-export default function Books() {
-    const { data } = useQuery(getBooksQuery);
-    const { isSignedIn } = useContext(UserContext)
+export default function Books({books}) {
 
     useEffect( () => {
-        if(data){
-           console.log(data.getBooks.books)
+        if(books){
+           console.log(books)
         }
-    },[data])
+    },[books])
   
     return (
       <div className="flex flex-1 bg-white text-black justify-center items-center py-[20px] px-[30px]">
@@ -40,7 +38,7 @@ export default function Books() {
             <div>
               <h1 className="text-[30px] text-[#9f9387] font-bold">All Books</h1>
             </div>
-            <BookTab books={data.getBooks.books} />
+            <BookTab books={books} />
           </div>
       </div>
     )
@@ -60,17 +58,25 @@ export default function Books() {
     }
 
     try {
-        const client = initializeApollo("", `Bearer ${token}`);
+        const client = createApolloClient();
   
-        await client.query({
+        const result = await client.query({
           query: getBooksQuery,
+          context: {
+            headers: {
+                "authorization": `Bearer ${token}`
+            },
+          },
         });
       
-        return addApolloState(client, {
-          props: {},
-        });
+        return {
+            props: {
+                books: result.data.getBooks.books
+            }
+        }
+      
     } catch (e) {
-        console.log("server error")
+        console.log("server error", e)
         return {
             redirect: {
               destination: '/',
