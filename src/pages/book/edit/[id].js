@@ -6,6 +6,7 @@ import Router from "next/router";
 import ErrorMessage from "@/components/ErrorMessage";
 import FormButton from "@/components/FormButton";
 import Cookies from "universal-cookie";
+import FormSelect from "@/components/FormSelect";
 
 const AddBookMutation =gql`
     mutation Mutation($file: Upload!, $title: String, $author: String) {
@@ -26,7 +27,7 @@ const AddBookMutation =gql`
     }
 `;
 
-export default function Add() {
+export default function Edit() {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [file, setFile] = useState(null)
@@ -63,7 +64,7 @@ export default function Add() {
         <div className="max-w-[1200px] flex flex-1 justify-center">
           <div className=" max-w-[400px] flex flex-1 flex-col items-center">
             <ErrorMessage message={error} />
-            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">Add Book</h1>
+            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">Edit Book</h1>
             <form className="flex flex-1 flex-col w-full" onSubmit={onSubmit}>
                 <FormInput 
                   label="Title"
@@ -80,6 +81,10 @@ export default function Add() {
                   required={true}
                   onChange={(e) => setAuthor(e.target.value)}
                   placeholder="Enter Author"
+                />
+                <FormSelect
+                    label="Collection"
+                    options={['Want to read','Reading','Read']}
                 />
                 <div>
                     <p className="text-[18px] m-2">Cover Image</p>

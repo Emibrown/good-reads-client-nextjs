@@ -1,4 +1,7 @@
 import { Tab } from '@headlessui/react'
+import Image from 'next/image';
+import moment from 'moment';
+import Link from 'next/link';
 
 const tabTitle = ['Want to read','Reading','Read'];
 
@@ -44,18 +47,26 @@ export default function BookTab({books = []}) {
                       key={book.id}
                       className="relative rounded-md p-3 hover:bg-gray-100"
                     >
-                      <h3 className="text-sm font-medium leading-5">
+                      <div>
+                        <Image alt='' loader={() => book.coverImage} src={book.coverImage} width={50} height={50}/>
+                      </div>
+                      <h3 className="text-[20px] font-medium leading-5">
                         {book.title}
                       </h3>
   
-                      <ul className="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
+                      <ul className="mt-1 flex space-x-1 text-[18px]font-normal leading-4 text-gray-500">
                         <li>{book.author} Author</li>
                         <li>&middot;</li>
                         <li>{book.rating} Rating</li>
+                        <li>&middot;</li>
+                      </ul>
+
+                      <ul className="mt-1 flex space-x-1 text-[18px] font-normal leading-4 text-gray-500">
+                        <li>{moment(new Date(parseInt(book.addedOn))).format('LLL')} Date</li>
                       </ul>
   
-                      <a
-                        href="#"
+                      <Link
+                        href={`/book/books/${book.id}`}
                         className={classNames(
                           'absolute inset-0 rounded-md',
                           'ring-blue-400 focus:z-10 focus:outline-none focus:ring-2'
