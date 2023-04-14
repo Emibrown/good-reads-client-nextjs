@@ -12,14 +12,16 @@ Next Setup environment variable on:
 NEXT_PUBLIC_HTTP_URL=<graphQl_server_url_http> #Example http://localhost:8081/graphql
 NEXT_PUBLIC_WS_URL=<graphQl_server_url_ws>   #Example ws://localhost:8081/graphql
 
-...
+```
+
 
 Next Install all npm dependencies
 
 ```bash
 npm install
 
-...
+```
+
 
 Finally, run the next.js server:
 
@@ -27,5 +29,6 @@ Finally, run the next.js server:
 npm run dev
 
 ```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
