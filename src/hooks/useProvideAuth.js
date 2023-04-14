@@ -8,9 +8,6 @@ function useProvideAuth() {
     const [authToken, setAuthToken] = useState(null)
 
     useEffect(() => {
-           //checking if there already is a state in localstorage
-           //if yes, update the current state with the stored one
-          //  setAuthToken(JSON.parse(localStorage.getItem("state")))
            const token = cookies.get("token");
            if( typeof token !== "undefined"){
                 console.log("token", token)
@@ -20,7 +17,6 @@ function useProvideAuth() {
 
      useEffect(() => {
         if (authToken !== null) {
-          //  localStorage.setItem("state", JSON.stringify(authToken)); 
            cookies.set("token", authToken, { path: "/" });
         }
      }, [authToken]);

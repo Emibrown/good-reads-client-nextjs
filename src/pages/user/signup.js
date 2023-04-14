@@ -6,6 +6,8 @@ import Router from "next/router";
 import ErrorMessage from "@/components/ErrorMessage";
 import FormButton from "@/components/FormButton";
 import Cookies from "universal-cookie";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from "next-i18next";
 
 const SignupMutation =gql`
     mutation Mutation($firstName: String!, $lastName: String!, $email: String!, $password: String!) {
@@ -27,7 +29,9 @@ export default function Signup() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
-    const { getAuthHeaders, isSignedIn } = useContext(UserContext)
+    const { isSignedIn } = useContext(UserContext)
+    const {t} = useTranslation();
+
 
     if(isSignedIn()) Router.push("/")
 
@@ -56,10 +60,10 @@ export default function Signup() {
         <div className="max-w-[1200px] flex flex-1 justify-center">
           <div className=" max-w-[400px] flex flex-1 flex-col items-center">
             <ErrorMessage message={error} />
-            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">Create Account</h1>
+            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">{t("home:create_account")}</h1>
             <form className="flex flex-1 flex-col w-full" onSubmit={onSubmit}>
                 <FormInput 
-                  label="First Name"
+                  label={t("home:first_name")}
                   type="text"
                   name="firstName"
                   required={true}
@@ -67,7 +71,7 @@ export default function Signup() {
                   placeholder="Enter first name"
                 />
                 <FormInput 
-                  label="Last Name"
+                  label={t("home:last_name")}
                   type="text"
                   name="lastName"
                   required={true}
@@ -75,7 +79,7 @@ export default function Signup() {
                   placeholder="Enter last name"
                 />
                 <FormInput 
-                  label="Email"
+                  label={t("home:email")}
                   type="email"
                   name="emailAddress"
                   required={true}
@@ -83,7 +87,7 @@ export default function Signup() {
                   placeholder="Enter Email Address"
                 />
                 <FormInput 
-                  label="Password"
+                  label={t("home:password")}
                   type="password"
                   name="password"
                   required={true}
@@ -93,7 +97,7 @@ export default function Signup() {
                 <FormButton 
                   type="submit"
                   loading={loading}
-                  title=" Sign Up"
+                  title={t("home:sign_up")}
                 />
             </form>
           </div>
@@ -103,7 +107,7 @@ export default function Signup() {
 }
 
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps = async ({ locale, req, res }) => {
     const cookies = new Cookies(req.headers.cookie);
     const token = cookies.get("token");
 
@@ -120,7 +124,9 @@ export const getServerSideProps = async ({ req, res }) => {
 
 
    return {
-    props: {},
+    props: {
+        ...(await serverSideTranslations(locale, ['home'])),
+    },
    }
    
   };

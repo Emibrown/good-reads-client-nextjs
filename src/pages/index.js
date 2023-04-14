@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from "react";
-import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import Banner from '@/components/Banner'
 import Feeds from '@/components/Feeds'
 import { gql, useSubscription } from '@apollo/client';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const BOOK_FEED = gql`
    subscription Subscription {
@@ -24,7 +24,6 @@ const BOOK_FEED = gql`
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-
   // Creating subscription for blogs //
   useSubscription(BOOK_FEED, {
     onData: (subscriptionData) => {
@@ -42,4 +41,12 @@ export default function Home() {
       <Feeds />
     </>
   )
+}
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['home'])),
+    }
+  } 
 }

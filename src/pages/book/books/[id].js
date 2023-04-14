@@ -10,6 +10,7 @@ import FormSelect from "@/components/FormSelect";
 import ErrorMessage from "@/components/ErrorMessage";
 import { UserContext } from "@/providers/UserContextProvider";
 import Router from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 const getBook = gql`
    query Query($id: String) {
@@ -140,7 +141,7 @@ export default function BookId({book}) {
     )
   }
 
-  export async function getServerSideProps({ req, query }) {
+  export async function getServerSideProps({ locale, req, query }) {
     const cookies = new Cookies(req.headers.cookie);
     const token = cookies.get("token");
 
@@ -169,6 +170,7 @@ export default function BookId({book}) {
       
         return {
             props: {
+                ...(await serverSideTranslations(locale, ['home'])),
                 book: result.data.getBook.book
             }
         }

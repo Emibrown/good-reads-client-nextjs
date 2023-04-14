@@ -1,11 +1,11 @@
 import '@/styles/globals.css'
 import Header from '@/components/Header'
 import { ApolloProvider } from '@apollo/client';
-import useApollo from '../hooks/useApollo';
 import UserContextProvider from '@/providers/UserContextProvider';
 import { createApolloClient } from '@/apollo';
+import { appWithTranslation } from 'next-i18next';
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   const client = createApolloClient();
 
   return (
@@ -18,3 +18,5 @@ export default function App({ Component, pageProps }) {
 
   )
 }
+
+export default appWithTranslation(App);

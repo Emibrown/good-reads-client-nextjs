@@ -6,6 +6,8 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { UserContext } from "@/providers/UserContextProvider";
 import Router from "next/router";
 import Cookies from "universal-cookie";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from "next-i18next";
 
 const LoginMutation =gql`
     mutation Mutation($email: String!, $password: String!) {
@@ -21,6 +23,7 @@ export default function Login() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
     const { getAuthHeaders, setAuthToken, isSignedIn } = useContext(UserContext)
+    const {t} = useTranslation();
 
     if(isSignedIn()) Router.push("/")
 
@@ -53,10 +56,10 @@ export default function Login() {
         <div className="max-w-[1200px] flex flex-1 justify-center">
           <div className=" max-w-[400px] flex flex-1 flex-col items-center">
             <ErrorMessage message={error} />
-            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">Sign In</h1>
+            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">{t("home:sign_title")}</h1>
             <form className="flex flex-1 flex-col w-full" onSubmit={onSubmit}>
                 <FormInput 
-                  label="Email"
+                  label={t("home:email")}
                   type="email"
                   name="email"
                   placeholder="Enter email"
@@ -64,7 +67,7 @@ export default function Login() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <FormInput 
-                  label="Password"
+                  label={t("home:password")}
                   type="password"
                   name="password"
                   placeholder="Enter password"
@@ -74,7 +77,7 @@ export default function Login() {
                 <FormButton 
                   type="submit"
                   loading={loading}
-                  title=" Sign In"
+                  title={t("home:continue")}
                 />
             </form>
           </div>
@@ -83,11 +86,9 @@ export default function Login() {
     )
 }
 
-export const getServerSideProps = async ({ req, res }) => {
+export const getServerSideProps = async ({ locale, req, res }) => {
     const cookies = new Cookies(req.headers.cookie);
     const token = cookies.get("token");
-
-    console.log(token)
 
     if( typeof token !== "undefined"){
         return {
@@ -100,7 +101,9 @@ export const getServerSideProps = async ({ req, res }) => {
 
 
    return {
-    props: {},
+    props: {
+        ...(await serverSideTranslations(locale, ['home'])),
+    },
    }
    
   };

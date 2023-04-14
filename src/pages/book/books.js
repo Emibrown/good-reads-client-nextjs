@@ -1,10 +1,10 @@
 import React, { useEffect, useContext, useState } from "react";
-import { gql, useQuery } from "@apollo/client"
-import { addApolloState, initializeApollo, createApolloClient } from "@/apollo";
+import { gql } from "@apollo/client"
+import { createApolloClient } from "@/apollo";
 import Cookies from "universal-cookie";
-import { UserContext } from "@/providers/UserContextProvider";
 import BookTab from "@/components/BookTab";
-
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 
 const getBooksQuery = gql`
     query Query {
@@ -25,6 +25,7 @@ const getBooksQuery = gql`
 `;
 
 export default function Books({books}) {
+    const {t} = useTranslation()
 
     useEffect( () => {
         if(books){
@@ -36,7 +37,7 @@ export default function Books({books}) {
       <div className="flex flex-1 bg-white text-black justify-center items-center py-[20px] px-[30px]">
           <div className="max-w-[1200px] flex-1">
             <div>
-              <h1 className="text-[30px] text-[#9f9387] font-bold">All Books</h1>
+              <h1 className="text-[30px] text-[#9f9387] font-bold">{t("home:all_bk")}</h1>
             </div>
             <BookTab books={books} />
           </div>
@@ -44,7 +45,7 @@ export default function Books({books}) {
     )
   }
   
-  export const getServerSideProps = async ({ req, res }) => {
+  export const getServerSideProps = async ({ locale, req, res }) => {
     const cookies = new Cookies(req.headers.cookie);
     const token = cookies.get("token");
 
@@ -71,6 +72,7 @@ export default function Books({books}) {
       
         return {
             props: {
+                ...(await serverSideTranslations(locale, ['home'])),
                 books: result.data.getBooks.books
             }
         }

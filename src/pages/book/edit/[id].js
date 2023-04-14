@@ -8,6 +8,8 @@ import ErrorMessage from "@/components/ErrorMessage";
 import FormButton from "@/components/FormButton";
 import Cookies from "universal-cookie";
 import FormSelect from "@/components/FormSelect";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import { useTranslation } from "next-i18next";
 
 const UpdateBookMutation =gql`
     mutation Mutation($file: Upload, $id: String, $title: String, $author: String, $bookCollection: String) {
@@ -54,8 +56,9 @@ export default function Edit({book}) {
     const [collection, setCollection] = useState('Read')
     const [file, setFile] = useState(null)
     const [error, setError] = useState(null)
-    const { getAuthHeaders } = useContext(UserContext)
-    
+    const { getAuthHeaders } = useContext(UserContext)    
+    const {t} = useTranslation()
+
     const [updateBook, { loading, data }] = useMutation(UpdateBookMutation, {
         variables: { 
             file,
@@ -100,10 +103,10 @@ export default function Edit({book}) {
         <div className="max-w-[1200px] flex flex-1 justify-center">
           <div className=" max-w-[400px] flex flex-1 flex-col items-center">
             <ErrorMessage message={error} />
-            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">Edit Book</h1>
+            <h1 className="text-[30px] flex flex-1 text-[#9f9387] font-bold">{t("home:edit_bk")}</h1>
             <form className="flex flex-1 flex-col w-full" onSubmit={onSubmit}>
                 <FormInput 
-                  label="Title"
+                  label={t(t("home:title"))}
                   type="text"
                   name="title"
                   required={true}
@@ -112,7 +115,7 @@ export default function Edit({book}) {
                   placeholder="Enter Title"
                 />
                 <FormInput 
-                  label="Author"
+                  label={t("home:author")}
                   type="text"
                   name="author"
                   value={author}
@@ -121,20 +124,20 @@ export default function Edit({book}) {
                   placeholder="Enter Author"
                 />
                 <FormSelect
-                    label="Collection"
+                    label={t("home:collection")}
                     required
                     value={collection}
                     options={['Want to read','Reading','Read']}
                     onChange={(e) => setCollection(e.target.value)}
                 />
                 <div>
-                    <p className="text-[18px] m-2">Cover Image</p>
+                    <p className="text-[18px] m-2">{t("home:cover_image")}</p>
                     <input type="file"  onChange={(e) => setFile(e.target.files[0])} />
                 </div>
                 <FormButton 
                   type="submit"
                   loading={loading}
-                  title="Continue"
+                  title={t("home:continue")}
                 />
             </form>
           </div>
@@ -143,7 +146,7 @@ export default function Edit({book}) {
     )
 }
 
-export const getServerSideProps = async ({ req, query }) => {
+export const getServerSideProps = async ({ locale, req, query }) => {
   const cookies = new Cookies(req.headers.cookie);
   const token = cookies.get("token");
 
@@ -173,6 +176,7 @@ export const getServerSideProps = async ({ req, query }) => {
     
         return {
             props: {
+                ...(await serverSideTranslations(locale, ['home'])),
                 book: result.data.getBook.book
             }
         }
