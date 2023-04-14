@@ -80,7 +80,6 @@ export default function Edit({book}) {
         try{
            await updateBook();
         }catch(e){
-            console.log(e)
             setError(e.message)
         }
     }

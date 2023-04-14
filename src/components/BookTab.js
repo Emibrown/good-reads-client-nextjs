@@ -2,6 +2,7 @@ import { Tab } from '@headlessui/react'
 import Image from 'next/image';
 import moment from 'moment';
 import Link from 'next/link';
+import StarRating from './StarRating';
 
 const tabTitle = ['Want to read','Reading','Read'];
 
@@ -57,8 +58,8 @@ export default function BookTab({books = []}) {
                       <ul className="mt-1 flex space-x-1 text-[18px]font-normal leading-4 text-gray-500">
                         <li>{book.author} Author</li>
                         <li>&middot;</li>
-                        <li>{book.rating} Rating</li>
-                        <li>&middot;</li>
+                        {/* <li>{book.rating} Rating</li> */}
+                        <li><StarRating max={5} value={book.rating}/></li>
                       </ul>
 
                       <ul className="mt-1 flex space-x-1 text-[18px] font-normal leading-4 text-gray-500">

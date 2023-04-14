@@ -11,6 +11,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { UserContext } from "@/providers/UserContextProvider";
 import Router from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import StarRating from "@/components/StarRating";
 
 const getBook = gql`
    query Query($id: String) {
@@ -52,7 +53,7 @@ const ON_FINISH =gql`
 
 export default function BookId({book}) {
     const [id, setId] = useState(book.id)
-    const [rating, setRating] = useState(book.rating)
+    const [rating, setRating] = useState(null)
     const [error, setError] = useState(null)
     const { getAuthHeaders } = useContext(UserContext)
 
@@ -69,10 +70,6 @@ export default function BookId({book}) {
     });
 
     useEffect( () => {
-        console.log(book)
-    },[book])
-
-    useEffect( () => {
         if(data){
             Router.push("/book/books")
         }
@@ -80,6 +77,7 @@ export default function BookId({book}) {
 
     const onSubmit = async (e) => {
         e.preventDefault()
+        if(!rating) return
         setError(null)
         try{
            await onFinish();
@@ -109,7 +107,7 @@ export default function BookId({book}) {
                         <p>{moment(new Date(parseInt(book.addedOn))).format('LLL')} Date</p>
                     </div>
                     <div className="mt-1 flex space-x-2 text-[20px]font-normal leading-4 text-gray-500">
-                        <p>{book.rating} Rating</p>
+                        <StarRating max={5} value={book.rating}/>
                     </div>
                     <div>
                         <Link href={`/book/edit/${book.id}`} className="bg-[#f6d479] inline-block text-center w-[100%] text-black py-[10px] px-[20px]">Modify Book</Link>
@@ -118,12 +116,13 @@ export default function BookId({book}) {
                         <div>
                             <ErrorMessage message={error} />
                             <form className="flex flex-1 flex-col w-full" onSubmit={onSubmit}>
-                                <FormSelect
-                                    label="Rate this book from 0 - 5"
-                                    required
-                                    value={rating}
-                                    options={[0,1,2,3,4,5]}
-                                    onChange={(e) => setRating(e.target.value)}
+                                <p className="text-[20px]">Rate this book</p>
+                                <StarRating 
+                                    max={5} 
+                                    value={rating} 
+                                    disabled={false}
+                                    starClass="text-[50px]"
+                                    onChange={(val) => setRating(val.toString())}
                                 />
                                 <FormButton 
                                     type="submit"

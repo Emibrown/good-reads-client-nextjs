@@ -1,49 +1,30 @@
-import React, {useState, useEffect, useContext} from "react";
-import { Inter } from 'next/font/google'
+import React from "react";
 import Banner from '@/components/Banner'
-import Feeds from '@/components/Feeds'
-import { gql, useSubscription } from '@apollo/client';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from "next-i18next";
 
-const BOOK_FEED = gql`
-   subscription Subscription {
-        bookFeed {
-          addedOn
-          author
-          bookCollection
-          coverImage
-          finished
-          id
-          rating
-          title
-          user
-        }
-    }
-`;
-
-const inter = Inter({ subsets: ['latin'] })
-
-export default function Home() {
-  // Creating subscription for blogs //
-  useSubscription(BOOK_FEED, {
-    onData: (subscriptionData) => {
-      // This function will get triggered one a publish event is being initited by the server
-      // if (subscriptionData) {
-        // we are updating the state of blogs
-        console.log("subscriptionData", subscriptionData?.data?.data?.bookFeed);
-      // }
-    },
-  });
+export default function Home({books}) {
+  const {t} = useTranslation();
 
   return (
     <>
       <Banner/>
-      <Feeds />
+      <div className="flex flex-1 bg-white text-black justify-center items-center py-[20px] px-[30px]">
+          <div className="max-w-[1200px] flex-1">
+            <div>
+              <h1 className="text-[30px] text-[#9f9387] font-bold">{t("home:welcome_title")}</h1>
+              <p className="text-[20px]">
+                {t("home:welcome_msg")}
+              </p>
+            </div>
+          </div>
+      </div>
     </>
   )
 }
 
 export async function getServerSideProps({ locale }) {
+
   return {
     props: {
       ...(await serverSideTranslations(locale, ['home'])),

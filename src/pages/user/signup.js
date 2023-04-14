@@ -32,7 +32,6 @@ export default function Signup() {
     const { isSignedIn } = useContext(UserContext)
     const {t} = useTranslation();
 
-
     if(isSignedIn()) Router.push("/")
 
     const [createUser, { loading, data }] = useMutation(SignupMutation, {

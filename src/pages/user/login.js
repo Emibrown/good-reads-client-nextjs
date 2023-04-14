@@ -47,10 +47,6 @@ export default function Login() {
         }
     },[data, setAuthToken])
 
-    useEffect( () => {
-        console.log(getAuthHeaders())
-    },[getAuthHeaders])
-
     return (
         <div className="flex flex-1 bg-white text-black justify-center items-center py-[20px] px-[30px]">
         <div className="max-w-[1200px] flex flex-1 justify-center">

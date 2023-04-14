@@ -49,6 +49,7 @@ export default function Header() {
             <div className="flex flex-1 text-black items-center mt-[20px] space-x-[30px]">
                 <Link href="/book/add" className="text-[22px]">{t("home:add_bk")}</Link>
                 <Link href="/book/books" className="text-[22px]">{t("home:my_bk")}</Link>
+                <Link href="/feeds" className="text-[22px]">{t("home:feeds_page_title")}</Link>
             </div>
             ): null}
         </div>

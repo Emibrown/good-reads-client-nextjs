@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import BookTab from "@/components/BookTab";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
+import Filter from "@/components/Filter";
 
 const getBooksQuery = gql`
     query Query {
@@ -25,27 +26,23 @@ const getBooksQuery = gql`
 `;
 
 export default function Books({books}) {
+    const [allBooks, setAllBooks] = useState(books)
     const {t} = useTranslation()
-
-    useEffect( () => {
-        if(books){
-           console.log(books)
-        }
-    },[books])
-  
+ 
     return (
       <div className="flex flex-1 bg-white text-black justify-center items-center py-[20px] px-[30px]">
           <div className="max-w-[1200px] flex-1">
             <div>
               <h1 className="text-[30px] text-[#9f9387] font-bold">{t("home:all_bk")}</h1>
             </div>
-            <BookTab books={books} />
+            <Filter value={books} onChange={(val) => setAllBooks(val)} />
+            <BookTab books={allBooks} />
           </div>
       </div>
     )
   }
   
-  export const getServerSideProps = async ({ locale, req, res }) => {
+  export const getServerSideProps = async ({ locale, req }) => {
     const cookies = new Cookies(req.headers.cookie);
     const token = cookies.get("token");
 
