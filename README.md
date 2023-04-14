@@ -2,10 +2,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First make sure the graphQL server is running
+1, First make sure the graphQL server is running
 [https://github.com/Emibrown/Good-Reads-App](https://github.com/Emibrown/Good-Reads-App)
 
-Next Setup environment variable on:
+2, Next Setup environment variable on:
 
 ```bash
 # .env.local
@@ -15,7 +15,7 @@ NEXT_PUBLIC_WS_URL=<graphQl_server_url_ws>   #Example ws://localhost:8081/graphq
 ```
 
 
-Next Install all npm dependencies
+3, Next Install all npm dependencies
 
 ```bash
 npm install
@@ -23,7 +23,7 @@ npm install
 ```
 
 
-Finally, run the next.js server:
+4, Finally, run the next.js server:
 
 ```bash
 npm run dev
